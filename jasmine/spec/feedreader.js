@@ -91,6 +91,21 @@ $(function() {
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
 
+         beforeEach(function(done) {
+           // load the first feed
+           loadFeed(0, function() {
+             done();
+           });
+         });
+
+         it('should load a feed', function(done) {
+           // All '.entry' elements descended from '.feed'
+           var entries = $('.feed').has('.entry');
+           // The number of entries should not be 0
+           expect(entries.length).not.toBe(0);
+           done();
+         });
+
     });
 
     /* TODO: Write a new test suite named "New Feed Selection"
