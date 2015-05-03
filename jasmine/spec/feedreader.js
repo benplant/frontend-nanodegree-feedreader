@@ -123,12 +123,10 @@ $(function() {
       // Load and record the first feed content
       loadFeed(0, function() {
         firstFeedContent = $('.feed').html();
-        console.log("First" + firstFeedContent);
       });
       // Load and record the second feed content
       loadFeed(1, function() {
         secondFeedContent = $('.feed').html();
-        console.log("Second" + secondFeedContent);
         done();
       });
     });
@@ -137,4 +135,41 @@ $(function() {
       expect(firstFeedContent).not.toBe(secondFeedContent);
     });
   });
+
+
+  // Test feed sorting
+  describe('Default Feed Sorting', function() {
+
+    beforeEach(function(done) {
+      // Load the first feed
+      loadFeed(0, function() {
+        done();
+      });
+    });
+
+    it('should be sorted ascending by title', function() {
+      var firstTitle = $('.entry').first().find('h2').html();
+      var lastTitle = $('.entry').last().find('h2').html();
+      expect(firstTitle).toBeLessThan(lastTitle);
+    });
+  });
+
+  describe('Feed Sorting', function() {
+
+    beforeEach(function(done) {
+      // Trigger the sort order
+      $('.header-title').trigger('click');
+      // Load the feed with call back to confirm display has updated
+      loadFeed(0, function() {
+        done();
+      });
+    });
+
+    it('should be sorted descending by title when header is clicked', function() {
+      var firstTitle = $('.entry').first().find('h2').html();
+      var lastTitle = $('.entry').last().find('h2').html();
+      expect(firstTitle).toBeGreaterThan(lastTitle);
+    });
+  });
+
 }());

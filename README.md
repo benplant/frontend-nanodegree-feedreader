@@ -31,6 +31,12 @@ and then open index.html in your browser.
 
 The Jasmine spec results will show at the bottom of the window.
 
+###Results:
+
+* All required tests pass and are comprehensive enough to test the app.
+* Bonus tests and functionality added to allow sorting of feeds by clicking on the feed header title.
+
+
 ###Resources Used:
 
 **Primary Course**

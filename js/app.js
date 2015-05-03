@@ -23,6 +23,8 @@ var allFeeds = [
     }
 ];
 
+var sortAscending = true;
+
 /* This function starts up our application. The Google Feed
  * Reader API is loaded asynchonously and will then call this
  * function when the API is loaded.
@@ -64,6 +66,20 @@ function loadFeed(id, cb) {
             title.html(feedName);   // Set the header text
             container.empty();      // Empty out all previous entries
 
+            // Sort by publishedDate
+            //entries.sort(function(entry1, entry2) {
+            //    return Date.parse(entry2.publishedDate) - Date.parse(entry1.publishedDate);
+            //});
+
+            // Sort by title
+            entries.sort(function(entry1, entry2) {
+                if (sortAscending) {
+                    return entry1.title > entry2.title;
+                } else {
+                    return entry1.title < entry2.title;
+                }
+            });
+
             /* Loop through the entries we just loaded via the Google
              * Feed Reader API. We'll then parse that entry against the
              * entryTemplate (created above using Handlebars) and append
@@ -95,7 +111,9 @@ $(function() {
         feedList = $('.feed-list'),
         feedItemTemplate = Handlebars.compile($('.tpl-feed-list-item').html()),
         feedId = 0,
-        menuIcon = $('.menu-icon-link');
+        menuIcon = $('.menu-icon-link'),
+        currentFeed = 0,
+        headerTitle = $('.header-title');
 
     /* Loop through all of our feeds, assigning an id property to
      * each of the feeds based upon its index within the array.
@@ -112,13 +130,14 @@ $(function() {
 
     /* When a link in our feedList is clicked on, we want to hide
      * the menu, load the feed, and prevent the default action
-     * (following the link) from occuring.
+     * (following the link) from occurring.
      */
     feedList.on('click', 'a', function() {
         var item = $(this);
 
         $('body').addClass('menu-hidden');
-        loadFeed(item.data('id'));
+        currentFeed = item.data('id');
+        loadFeed(currentFeed);
         return false;
     });
 
@@ -128,4 +147,15 @@ $(function() {
     menuIcon.on('click', function() {
         $('body').toggleClass('menu-hidden');
     });
+
+    /* When the Header Title for the feed is clicked on,
+     * we want to toggle the sorting of the feeds by title
+     */
+    headerTitle.on('click', function() {
+        // Toggle sorting
+        sortAscending = !sortAscending;
+        // Reload current feed
+        loadFeed(currentFeed);
+    });
+
 }());
